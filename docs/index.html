@@ -7,8 +7,15 @@
    <body>
 
       <h1> Dynamic figure </h1>
+      <svg width = "300" height = "300">
+          <circle cx = "100" cy = "70" r= "10" />
+      </svg>
       <script>
-         // write your d3 code here.. 
+          d3.csv("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/graph.csv", function(data) {
+              for(var i=0;i<10;i++){
+                  var arr = data[i];
+                  console.log(arr);
+              }})
       </script>
    </body>
 </html>
