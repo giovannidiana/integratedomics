@@ -7,15 +7,24 @@
    <body>
 
       <h1> Dynamic figure </h1>
-      <svg width = "300" height = "300">
-          <circle cx = "100" cy = "70" r= "10" />
+      
+      <svg id='svg1' width = "1000" height = "1000" viewbox = "-20 -20 40 40">
+          <circle cx = "100" cy = "70" r= "10"/>
       </svg>
+
       <script>
+
           d3.csv("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/graph.csv", function(data) {
-              for(var i=0;i<10;i++){
-                  var arr = data[i];
-                  console.log(arr);
-              }})
+
+              d3.select("body").select("svg")
+             .selectAll("circle")
+              .data(data)
+              .enter()
+                  .append("circle").attr("cx",function(d){ return d[' X'];})
+                  .attr("cy",function(d){ return d[' Y'];})
+                                 .attr("r",0.1)
+                                 .style("fill","green");
+          });
       </script>
    </body>
 </html>
