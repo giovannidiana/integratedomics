@@ -14,16 +14,25 @@
 
       <script>
 
-          d3.csv("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/graph.csv", function(data) {
+          d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/exported_data.JSON", function(data) {
 
               d3.select("body").select("svg")
              .selectAll("circle")
-              .data(data)
+              .data(data.node_df)
               .enter()
-                  .append("circle").attr("cx",function(d){ return d[' X'];})
-                  .attr("cy",function(d){ return d[' Y'];})
+                  .append("circle").attr("cx",function(d){ return d.x;})
+                  .attr("cy",function(d){ return d.y;})
                                  .attr("r",0.1)
-                                 .style("fill","green");
+                  .style("fill", function(d){ return d.color;});
+
+              d3.select("body").select("svg")
+                .selectAll("line")
+                .data(data.edge_df)
+                .enter()
+                  .append("line").attr("x1",function(d){ return d.x1;})
+                                 .attr("x2",function(d){ return d.x2;})
+                                 .attr("y1",function(d){ return d.y1;})
+                                 .attr("y2",function(d){ return d.y2;})
           });
       </script>
    </body>
