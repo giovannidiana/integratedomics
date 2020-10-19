@@ -106,7 +106,6 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
                 if(data.edge_pathways[ind][g]===1){
                     d3.select("#node"+data.edge_df[ind].from)
                         .style("display","inline")
-                    console.log("#node"+data.edge_df[ind].from)
                     d3.select("#node"+data.edge_df[ind].to)
                         .style("display","inline")
                     d3.select("#edge"+data.edge_df[ind].index)
