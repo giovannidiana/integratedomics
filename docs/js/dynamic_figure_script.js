@@ -79,6 +79,8 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
         var currentGroup = "ALL";
         var key_list = Object.keys(data.edge_pathways[0])
         key_list.push("ALL");
+        key_list.push("UP");
+        key_list.push("DOWN");
 
         var dropDown = d3.select("#dropdown_pathways")
             .selectAll("option")
@@ -103,7 +105,16 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
                 .style("display","none")
 
             for(let ind=0;ind<data.edge_df.length;ind++){
-                if(data.edge_pathways[ind][g]===1 || g=="ALL"){
+
+                let bool_var;
+
+                if(g=="UP" || g=="DOWN"){
+                    bool_var = (data.edge_df[ind].updown==g);
+                } else {
+                    bool_var = (data.edge_pathways[ind][g]===1);
+                }
+
+                if(bool_var || g=="ALL"){
                     d3.select("#node"+data.edge_df[ind].from)
                         .style("display","inline")
                     d3.select("#node"+data.edge_df[ind].to)
