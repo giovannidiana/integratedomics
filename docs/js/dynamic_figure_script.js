@@ -17,7 +17,9 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .selectAll("line")
             .data(data.edge_df)
             .enter()
-            .append("line").attr("x1",function(d){ return d.x1;})
+            .append("line")
+            .attr("id",function(d){ return "edge"+d.index;})
+            .attr("x1",function(d){ return d.x1;})
             .attr("x2",function(d){ return d.x2;})
             .attr("y1",function(d){ return d.y1;})
             .attr("y2",function(d){ return d.y2;})
@@ -30,6 +32,7 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .data(nodeL)
             .enter()
             .append("circle").attr("class","node")
+            .attr("id",function(d){ return "node"+d.node;})
             .attr("cx",function(d){ return d.x;})
             .attr("cy",function(d){ return d.y;})
             .attr("r",0.3)
@@ -43,10 +46,12 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
 
         nodeR = data.node_df.filter(function(d){return d.node_type=='R';})
         d3.select("svg")
-            .selectAll("rect")
+            .selectAll("rect_node")
             .data(nodeR)
             .enter()
             .append("rect")
+            .attr("class","node")
+            .attr("id",function(d){ return "node"+d.node;})
             .attr("x",function(d){ return d.x-rect_wdt/2.0;})
             .attr("y",function(d){ return d.y-rect_wdt/2.0;})
             .attr("width",rect_wdt)
@@ -59,54 +64,67 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
 
 
         d3.select("svg")
-            .selectAll("text")
+            .selectAll("text_node")
             .data(data.node_df)
             .enter()
             .append("text")
-            .attr("id",function(d){
-                if(d.cell=='-1'){
-                    return d.node;
-                } else {
-                    console.log(d.node+d.cell);
-                    return d.node+d.cell;
-
-                }})
+            .attr("class","node")
+            .attr("id",function(d){ return "text"+d.node;})
             .attr("font-family", "sans-serif")
             .attr("font-size", ".3px")
             .attr("x",function(d){return d.x+rect_wdt/2;})
             .attr("y",function(d){return d.y+rect_wdt;})
             .text(function(d){return d.node;})
 
+        var currentGroup = "ALL";
+        var key_list = Object.keys(data.edge_pathways[0])
+        key_list.push("ALL");
+
         var dropDown = d3.select("#dropdown_pathways")
             .selectAll("option")
-            .data(data.)
+            .data(key_list)
             .enter()
             .append('option')
             .text(function(d) {return d;})
             .attr("value", function(d) { return d; })
             .property("selected",function(d) { return d===currentGroup;});
 
+        d3.select("#dropdown_pathways")
+            .on("change",
+                function(d){
+                    currentGroup = this.value;
+                    onSelectionChange(currentGroup)
+                });
 
+        function onSelectionChange(g){
+            d3.select("svg").selectAll(".node")
+                .style("display","none")
+            d3.select("svg").selectAll("line")
+                .style("display","none")
 
+            for(let ind=0;ind<data.edge_df.length;ind++){
+                if(data.edge_pathways[ind][g]===1){
+                    d3.select("#node"+data.edge_df[ind].from)
+                        .style("display","inline")
+                    d3.select("#node"+data.edge_df[ind].to)
+                        .style("display","inline")
+                    console.log("#edge"+data.edge_df[ind].index)
+                    d3.select("#edge"+data.edge_df[ind].index)
+                        .style("display","inline")                  
+                }
+            }
 
+        }
     });
 
 function on_mouseover(d,i){
     d3.select(this).attr("fill","orange");
-    var nodename = d.node;
-    if(d.cell!=-1){
-        nodename=nodename+d.cell;
-    }
-    console.log(nodename)
-
-    d3.select("#"+nodename).transition().attr("font-size","1px");
+    d3.select("#text"+d.node).transition().attr("font-size","1px");
 }
 
 function on_mouseout(d,i){
     d3.select(this).attr("fill",function(d) {return d.color;});
-    var nodename = d.node;
-    if(d.cell!=-1) nodename+=d.cell;
-    d3.select("#"+nodename).attr("font-size",".3px");
+    d3.select("#text"+d.node).attr("font-size",".3px");
 }
 
 
