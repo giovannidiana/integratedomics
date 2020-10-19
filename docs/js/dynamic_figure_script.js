@@ -21,8 +21,8 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("class","cell")
             .attr("font-family", "sans-serif")
             .attr("font-size", ".5px")
-            .attr("x",function(d){return d.x+7*Math.cos(d.angle);})
-            .attr("y",function(d){return d.y+7*Math.sin(d.angle);})
+            .attr("x",function(d){return d.x+(6+d.radius)*Math.cos(d.angle);})
+            .attr("y",function(d){return d.y+(6+d.radius)*Math.sin(d.angle);})
             .text(function(d){return d.name;})
 
         d3.select("svg")
