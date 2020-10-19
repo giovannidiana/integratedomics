@@ -36,8 +36,8 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("stroke-width", 0.1)
             .attr("stroke","white")
             .attr("fill", function(d){ return d.color;})
-            .on("mouseover", on_mouseover)
-            .on("mouseout", on_mouseout)
+            .on("mouseenter", on_mouseover)
+            .on("mouseleave", on_mouseout)
 
         var rect_wdt=0.6;
 
@@ -54,8 +54,8 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("stroke-width", 0.1)
             .attr("stroke","white")
             .attr("fill", function(d){ return d.color;})
-            .on("mouseover", on_mouseover)
-            .on("mouseout", on_mouseout)
+            .on("mouseenter", on_mouseover)
+            .on("mouseleave", on_mouseout)
 
 
         d3.select("svg")
@@ -74,8 +74,18 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("font-family", "sans-serif")
             .attr("font-size", ".3px")
             .attr("x",function(d){return d.x+rect_wdt/2;})
-            .attr("y",function(d){return d.y+rect_wdt/2;})
+            .attr("y",function(d){return d.y+rect_wdt;})
             .text(function(d){return d.node;})
+
+        var dropDown = d3.select("#dropdown_pathways")
+            .selectAll("option")
+            .data(data.)
+            .enter()
+            .append('option')
+            .text(function(d) {return d;})
+            .attr("value", function(d) { return d; })
+            .property("selected",function(d) { return d===currentGroup;});
+
 
 
 
@@ -89,7 +99,7 @@ function on_mouseover(d,i){
     }
     console.log(nodename)
 
-    d3.select("#"+nodename).attr("font-size","1px");
+    d3.select("#"+nodename).transition().attr("font-size","1px");
 }
 
 function on_mouseout(d,i){
@@ -98,3 +108,5 @@ function on_mouseout(d,i){
     if(d.cell!=-1) nodename+=d.cell;
     d3.select("#"+nodename).attr("font-size",".3px");
 }
+
+
