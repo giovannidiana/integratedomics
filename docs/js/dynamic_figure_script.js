@@ -74,7 +74,7 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("font-size", ".3px")
             .attr("x",function(d){return d.x+rect_wdt/2;})
             .attr("y",function(d){return d.y+rect_wdt;})
-            .text(function(d){return d.node;})
+            .text(function(d){return d.name;})
 
         var currentGroup = "ALL";
         var key_list = Object.keys(data.edge_pathways[0])
@@ -103,13 +103,20 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
                 .style("display","none")
 
             for(let ind=0;ind<data.edge_df.length;ind++){
-                if(data.edge_pathways[ind][g]===1){
+                if(data.edge_pathways[ind][g]===1 || g=="ALL"){
                     d3.select("#node"+data.edge_df[ind].from)
                         .style("display","inline")
                     d3.select("#node"+data.edge_df[ind].to)
                         .style("display","inline")
+                    
+                    d3.select("#text"+data.edge_df[ind].from)
+                        .style("display","inline")
+                    d3.select("#text"+data.edge_df[ind].to)
+                        .style("display","inline")
+                    
                     d3.select("#edge"+data.edge_df[ind].index)
-                        .style("display","inline")                  
+                        .style("display","inline")
+                    
                 }
             }
 
