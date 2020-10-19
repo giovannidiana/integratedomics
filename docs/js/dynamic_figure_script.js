@@ -1,6 +1,6 @@
-          d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/exported_data.JSON", function(data) {
-
-              d3.select("svg")
+d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_13102020/exported_data.JSON", 
+    function(data) {
+        d3.select("svg")
                 .selectAll("circle_cell")
                 .data(data.cell_df)
                 .enter()
