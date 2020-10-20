@@ -16,6 +16,7 @@ ligand_updown <- as.character(read.table(paste(folder,"/ligand_updown.txt",sep="
 receptor_updown <- as.character(read.table(paste(folder,"/receptor_updown.txt",sep=""))$V1)
 edge_updown <- as.character(read.table(paste(folder,"/edge_regulation.dat",sep=""))$V1)
 edge_pathways <- read.table(paste(folder,"/edge_pathways.txt",sep=""),header=T)
+names(edge_pathways) = gsub('\\.',' ',names(edge_pathways))
 updown=c(receptor_updown,ligand_updown)
 
 node_color=updown
