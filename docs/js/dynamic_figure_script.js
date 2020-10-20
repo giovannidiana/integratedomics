@@ -1,3 +1,9 @@
+// Define the div for the tooltip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+
 d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligand_receptors_19102020/exported_data.JSON", 
     function(data) {
         d3.select("svg")
@@ -10,7 +16,7 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("cy",function(d){return d.y;})
             .attr("r",function(d){return d.radius;})
             .attr("stroke","grey")
-            .attr("fill","white")
+            .attr("fill","none")
             .attr("stroke-width",0.2);
 
         d3.select("svg")
@@ -38,55 +44,45 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
             .attr("stroke-width",0.1)
             .attr("stroke",function(d){return d.color;});
 
-        nodeL = data.node_df.filter(function(d){return d.node_type=='L';})
-        d3.select("svg")
-            .selectAll("circle_node")
-            .data(nodeL)
-            .enter()
-            .append("circle").attr("class","node")
-            .attr("id",function(d){ return "node"+d.node;})
-            .attr("cx",function(d){ return d.x;})
-            .attr("cy",function(d){ return d.y;})
-            .attr("r",0.3)
-            .attr("stroke-width", 0.1)
-            .attr("stroke","white")
-            .attr("fill", function(d){ return d.color;})
-            .on("mouseenter", on_mouseover)
-            .on("mouseleave", on_mouseout)
-
-        var rect_wdt=0.6;
-
-        nodeR = data.node_df.filter(function(d){return d.node_type=='R';})
-        d3.select("svg")
-            .selectAll("rect_node")
-            .data(nodeR)
-            .enter()
-            .append("rect")
-            .attr("class","node")
-            .attr("id",function(d){ return "node"+d.node;})
-            .attr("x",function(d){ return d.x-rect_wdt/2.0;})
-            .attr("y",function(d){ return d.y-rect_wdt/2.0;})
-            .attr("width",rect_wdt)
-            .attr("height",rect_wdt)
-            .attr("stroke-width", 0.1)
-            .attr("stroke","white")
-            .attr("fill", function(d){ return d.color;})
-            .on("mouseenter", on_mouseover)
-            .on("mouseleave", on_mouseout)
-
-
-        d3.select("svg")
-            .selectAll("text_node")
+        var GNODE=d3.select("svg")
+            .selectAll("g_node")
             .data(data.node_df)
             .enter()
-            .append("text")
+            .append("g")
             .attr("class","node")
-            .attr("id",function(d){ return "text"+d.node;})
-            .attr("font-family", "sans-serif")
-            .attr("font-size", ".3px")
-            .attr("x",function(d){return d.x+rect_wdt/2;})
-            .attr("y",function(d){return d.y+rect_wdt;})
-            .text(function(d){return d.name;})
+            .attr("id",function(d){return "node"+d.node;})
+            .on("mouseenter", on_mouseover)
+            .on("mouseleave", on_mouseout);
+
+        var rect_wdt=0.6;
+        GNODE.each(function(d,i){
+            if(d.node_type==="R"){
+                d3.select(this).append("rect")
+                    .attr("class","marker")
+                    .attr("x",function(d){ return d.x-rect_wdt/2.0;})
+                    .attr("y",function(d){ return d.y-rect_wdt/2.0;})
+                    .attr("width",rect_wdt)
+                    .attr("height",rect_wdt)
+                    .attr("stroke-width", 0.1)
+                    .attr("stroke","white")
+                    .attr("fill", function(d){ return d.color;})
+            } else {
+                d3.select(this).append("circle")
+                    .attr("class","marker")
+                    .attr("cx",function(d){ return d.x;})
+                    .attr("cy",function(d){ return d.y;})
+                    .attr("r",0.3)
+                    .attr("stroke-width", 0.1)
+                    .attr("stroke","white")
+                    .attr("fill", function(d){ return d.color;})
+            }
+        });
+
+        GNODE.append("text")
+        .attr("x",function(d){return d.x+rect_wdt/2})
+        .attr("y",function(d){return d.y+rect_wdt})
+        .style("font","0.3px sant-serif" )
+        .text(function(d){return d.name;})
 
         var currentGroup = "ALL";
         var key_list = Object.keys(data.edge_pathways[0])
@@ -131,15 +127,10 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
                         .style("display","inline")
                     d3.select("#node"+data.edge_df[ind].to)
                         .style("display","inline")
-                    
-                    d3.select("#text"+data.edge_df[ind].from)
-                        .style("display","inline")
-                    d3.select("#text"+data.edge_df[ind].to)
-                        .style("display","inline")
-                    
+
                     d3.select("#edge"+data.edge_df[ind].index)
                         .style("display","inline")
-                    
+
                 }
             }
 
@@ -147,13 +138,22 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
     });
 
 function on_mouseover(d,i){
-    d3.select(this).attr("fill","orange");
-    d3.select("#text"+d.node).transition().attr("font-size","1px");
+    let marker = d3.select(this).select(".marker");
+    marker.attr("fill","orange");
+    d3.select(this).select("text").attr("visibility","hidden");
+    div.transition()
+    .duration(200)
+    .style("opacity",0.9)
+    console.log(d.name)
+    div.html(d.name)
+    .style("left",d3.event.pageX+"px")
+    .style("top",d3.event.pageY-20+"px")
 }
 
 function on_mouseout(d,i){
-    d3.select(this).attr("fill",function(d) {return d.color;});
-    d3.select("#text"+d.node).attr("font-size",".3px");
+    d3.select(this).select(".marker").attr("fill",function(d) {return d.color;});
+    d3.select(this).select("text").attr("visibility","visible");
+    div.transition().style("opacity",0);
 }
 
 

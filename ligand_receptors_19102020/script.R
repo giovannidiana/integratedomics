@@ -1,7 +1,7 @@
 
 data<-read.table("secretome_sheet1.csv",header=T)
 pathways<-read.table("secretome_sheet2.csv",header=T)
-edge_pathways<-c()
+edge_pathways<-data.frame()
 
 process=unique(sort(data$Ligand))
 ligand_updown=unique(data[order(data$Ligand),c(1,3)])[,2]
@@ -81,11 +81,11 @@ for(i in 1:nrow(data)){
 }
 
 #write receptor_cell labels into labels.txt
-write.table(cell_rec,file="labels.txt",col.names=F,row.names=F,quote=F)
-write.table(cell_rec_rec,file="labels_rec.txt",col.names=F,row.names=F,quote=F)
-write.table(as.numeric(as.factor(cell_rec_cell)),file="labels_cell.txt",col.names=F,row.names=F,quote=F)
+write.table(cell_rec,file="labels.txt",col.names=F,row.names=F)
+write.table(cell_rec_rec,file="labels_rec.txt",col.names=F,row.names=F)
+write.table(as.numeric(as.factor(cell_rec_cell)),file="labels_cell.txt",col.names=F,row.names=F)
 # write ligand labels in process_labels.
-write.table(process,file="process_labels.txt",col.names=F,row.names=F,quote=F)
+write.table(process,file="process_labels.txt",col.names=F,row.names=F)
 # write receptor_cell positions 
 write.table(cell_rec_pos,file="receptors_positions.txt",col.names=F,row.names=F)
 #write cell radii
@@ -93,8 +93,8 @@ write.table(rad,file="cell_rad.txt",col.names=F,row.names=F)
 write.table(cell_angle,file="cell_angle.txt",col.names=F,row.names=F)
 
 # write ligand state
-write.table(ligand_updown, file="ligand_updown.txt",col.names=F,row.names=F,quote=F)
-write.table(receptor_updown, file="receptor_updown.txt",col.names=F,row.names=F,quote=F)
+write.table(ligand_updown, file="ligand_updown.txt",col.names=F,row.names=F)
+write.table(receptor_updown, file="receptor_updown.txt",col.names=F,row.names=F)
 
-names(edge_pathways)=colnames(pathways)
-write.table(edge_pathways, file="edge_pathways.txt",col.names=T,row.names=F,quote=F)
+names(edge_pathways) = gsub("\\.",' ',names(edge_pathways))
+write.table(edge_pathways, file="edge_pathways.txt",col.names=T,row.names=F)
