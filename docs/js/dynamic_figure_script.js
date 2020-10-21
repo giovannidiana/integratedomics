@@ -140,20 +140,27 @@ d3.json("https://raw.githubusercontent.com/giovannidiana/springraph/master/ligan
 function on_mouseover(d,i){
     let marker = d3.select(this).select(".marker");
     marker.attr("fill","orange");
+
+    d3.selectAll("line").filter(function(data){
+        return data.from==d.node || data.to==d.node;})
+                        .attr("stroke-width",0.3);
+
     d3.select(this).select("text").attr("visibility","hidden");
     div.transition()
-    .duration(200)
-    .style("opacity",0.9)
+        .duration(200)
+        .style("opacity",0.8)
     console.log(d.name)
     div.html(d.name)
-    .style("left",d3.event.pageX+"px")
-    .style("top",d3.event.pageY-20+"px")
+        .style("left",d3.event.pageX+"px")
+        .style("top",d3.event.pageY-20+"px")
 }
 
 function on_mouseout(d,i){
     d3.select(this).select(".marker").attr("fill",function(d) {return d.color;});
     d3.select(this).select("text").attr("visibility","visible");
+    d3.selectAll("line").attr("stroke-width",0.1)
     div.transition().style("opacity",0);
+
 }
 
 
