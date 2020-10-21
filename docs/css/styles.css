@@ -16,10 +16,12 @@ div {
   border: none;
   border-radius: 10px;
   background-color: yellow;
-  font: 10px sans-serif bold;
+  font-size: 10px;
+  font-weight: bold;
   width: auto;
   height: auto;
   min-height: 0.2px;
   min-width: 1px;
   pointer-events: none;
 }
+
