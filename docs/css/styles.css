@@ -1,0 +1,25 @@
+h1 {
+  color: blue;
+}
+
+text {
+    pointer-events:none;
+}
+
+div {
+  border: 2px solid black;
+  padding:10px;
+}
+
+.tooltip {
+  position: absolute;
+  border: none;
+  border-radius: 10px;
+  background-color: yellow;
+  font: 10px sans-serif bold;
+  width: auto;
+  height: auto;
+  min-height: 0.2px;
+  min-width: 1px;
+  pointer-events: none;
+}
